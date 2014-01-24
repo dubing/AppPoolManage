@@ -8,7 +8,7 @@ namespace AppPoolManage.Web
 {
     public static class Constants
     {
-        public static string AddressHeader = "IIS://" + System.Environment.MachineName + "/W3SVC/";
+        public static string AddressHeader = "IIS://" + System.Environment.MachineName + "/W3SVC";
         public static string Username = null;
         public static string Pwd = null;
 

@@ -17,15 +17,44 @@ namespace AppPoolManage.Web
 
         public static string GetIISVersion()
         {
-            DirectoryEntry getEntity = GetDirectoryEntry(Constants.AddressHeader + "INFO", null, null);
+            DirectoryEntry getEntity = GetDirectoryEntry(Constants.AddressHeader + "/INFO", null, null);
             return getEntity.Properties["MajorIISVersionNumber"].Value.ToString();
+        }
+
+        private static DirectoryEntry test(string path)
+        {
+            return new DirectoryEntry(path);
         }
 
         public static Dictionary<string, string> GetWebsites()
         {
-            DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader, null, null);
-           return (from DirectoryEntry e in root.Children where e.SchemaClassName == "IIsWebServer" select e)
-               .ToDictionary(e => e.Properties["ServerComment"].Value.ToString(), e => GetWebSiteStatus(e.Name));
+            List<string> siteNames = new List<string>();
+
+            var root = new DirectoryEntry("IIS://localhost/W3SVC");
+
+           // DirectoryEntry root = test("IIS://localhost/W3SVC");
+            foreach (DirectoryEntry e in root.Children)
+            {
+                if (e.SchemaClassName == "IIsWebServer")
+                {
+                    siteNames.Add(e.Properties["ServerComment"].Value.ToString());
+                }
+            }
+
+
+            //DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader, null, null);
+            //Dictionary<string, string> Websites = new Dictionary<string, string>();
+            //foreach (DirectoryEntry e in root.Children)
+            //{
+            //    if (e.SchemaClassName == "IIsWebServer")
+            //    {
+            //        Websites.Add(e.Properties["ServerComment"].Value.ToString(), GetWebSiteStatus(e.Name));
+            //    }
+            //}
+
+
+
+            return null;
         }
 
         public static Dictionary<string, string> GetAppPools(string username = null, string pwd = null)
@@ -35,7 +64,7 @@ namespace AppPoolManage.Web
 
         public static bool ControlAppPool(string appPoolName, string command, string username = null, string pwd = null)
         {
-            string appPoolPath = Constants.AddressHeader + "AppPools/" + appPoolName;
+            string appPoolPath = Constants.AddressHeader + "/AppPools/" + appPoolName;
 
             try
             {
@@ -55,7 +84,7 @@ namespace AppPoolManage.Web
 
         private static Dictionary<string, string> GetApplicationPools(string computerName, string username, string pwd)
         {
-            var root = GetDirectoryEntry(Constants.AddressHeader + "AppPools", username, pwd);
+            var root = GetDirectoryEntry(Constants.AddressHeader + "/AppPools", username, pwd);
 
             if (root == null) return null;
             var items = (from DirectoryEntry entry in root.Children let properties = entry.Properties select entry.Name).ToList();
@@ -67,7 +96,7 @@ namespace AppPoolManage.Web
         private static string GetStatus(string appPoolName)
         {
             string status = string.Empty;
-            string appPoolPath = Constants.AddressHeader + "AppPools/" + appPoolName;
+            string appPoolPath = Constants.AddressHeader + "/AppPools/" + appPoolName;
             int intStatus = 0;
             try
             {
@@ -96,7 +125,7 @@ namespace AppPoolManage.Web
         private static string GetWebSiteStatus(string siteId)
         {
             string result = "unknown";
-            DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader + siteId, Constants.Username,Constants.Pwd);
+            DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader + siteId, Constants.Username, Constants.Pwd);
             PropertyValueCollection pvc;
             pvc = root.Properties["ServerState"];
             if (pvc.Value != null)
@@ -109,19 +138,20 @@ namespace AppPoolManage.Web
 
         private static DirectoryEntry GetDirectoryEntry(string path, string username, string pwd)
         {
-            DirectoryEntry root = null;
+            return new DirectoryEntry(path);
+        //    DirectoryEntry root = null;
 
-            try
-            {
-                root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
-            }
+        //    try
+        //    {
+        //        root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
+        //    }
 
-            catch (Exception e)
-            {
-                throw new ArgumentException("username or pwd is wrong");
-            }
+        //    catch (Exception e)
+        //    {
+        //        throw new ArgumentException("username or pwd is wrong");
+        //    }
 
-            return root;
+        //    return root;
         }
 
 
