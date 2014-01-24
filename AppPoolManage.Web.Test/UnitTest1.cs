@@ -15,6 +15,13 @@ namespace AppPoolManage.Web.Test
         }
 
         [TestMethod]
+        public void GetVersion()
+        {
+            var iisVersion = AppPoolCore.GetIISVersion();
+            Assert.AreEqual(iisVersion,"7");
+        }
+
+        [TestMethod]
         public void RecycleAppPool()
         {          
             string appPoolName = "phase3";
