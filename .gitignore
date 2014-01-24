@@ -1,0 +1,31 @@
+[Oo]bj
+[Bb]in
+*.user
+*.suo
+*.[Cc]ache
+*.bak
+*.ncb
+*.log 
+*.DS_Store
+[Tt]humbs.db 
+_ReSharper.*
+*.resharper
+.DS_Store
+UmbracoTraceLog*
+iMakeup.Web.UI.Publish.xml
+
+# Folders ignored
+_[Oo]utput/
+#[Dd]ebug/
+[Bb]in/
+[Rr]elease*/
+obj/
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+
+# NuGet files
+packages/
+*.nupkg
+*.InstallLog
+SetupFile/

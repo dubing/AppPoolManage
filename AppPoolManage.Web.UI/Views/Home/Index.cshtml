@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>AppPoolManage</title>
+    <script src="../../Scripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        .webGrid {
+            margin: 4px;
+            border-collapse: collapse;
+            width: 500px;
+            background-color: #FCFCFC;
+        }
+
+        .header {
+            background-color: #C1D4E6;
+            font-weight: bold;
+            color: #FFF;
+        }
+
+        .webGrid th, .webGrid td {
+            border: 1px solid #C0C0C0;
+            padding: 5px;
+        }
+
+        .alt {
+            background-color: #E4E9F5;
+            color: #000;
+        }
+
+        .gridHead a:hover {
+            text-decoration: underline;
+        }
+
+        .Status {
+            width: auto;
+        }
+
+        .select {
+            background-color: #389DF5;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        @{
+            if (ViewData["Message"] != null)
+            {
+                @Html.Label(ViewData["Message"].ToString());
+            }
+            else
+            {
+                @Html.Label("hoho");
+            }
+        }
+        @{
+            var grid = new WebGrid(Model, canPage: true, rowsPerPage: 5, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+            grid.Pager(WebGridPagerModes.NextPrevious);}
+        <div id="gridContent">
+            @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "header",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                    grid.Column("AppPoolsName", " AppPoolsName"),
+                    grid.Column("Status", " Status", style: "Status"),
+                    grid.Column(
+                        columnName: "",
+                        format: item => Html.ActionLink("Recycle", "ControlAppPool", new { appPoolName = item.AppPoolsName, command = "Recycle" })
+                    ),
+                    grid.Column(
+                        columnName: "",
+                        format: item => Html.ActionLink("Start", "ControlAppPool", new { appPoolName = item.AppPoolsName, command = "Start" })
+                    ),
+                    grid.Column(
+                        columnName: "",
+                        format: item => Html.ActionLink("Stop", "ControlAppPool", new { appPoolName = item.AppPoolsName, command = "Stop" })
+                    )
+         ))
+        </div>
+</body>
+</html>
