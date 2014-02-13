@@ -32,29 +32,19 @@ namespace AppPoolManage.Web
 
             var root = new DirectoryEntry("IIS://localhost/W3SVC");
 
-           // DirectoryEntry root = test("IIS://localhost/W3SVC");
-            foreach (DirectoryEntry e in root.Children)
-            {
-                if (e.SchemaClassName == "IIsWebServer")
-                {
-                    siteNames.Add(e.Properties["ServerComment"].Value.ToString());
-                }
-            }
+            return (from DirectoryEntry e in root.Children where e.SchemaClassName == "IIsWebServer" select e)
+                .ToDictionary(e => e.Properties["ServerComment"].Value.ToString(), e => GetWebSiteStatus(e.Name));
 
-
-            //DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader, null, null);
-            //Dictionary<string, string> Websites = new Dictionary<string, string>();
             //foreach (DirectoryEntry e in root.Children)
             //{
             //    if (e.SchemaClassName == "IIsWebServer")
             //    {
-            //        Websites.Add(e.Properties["ServerComment"].Value.ToString(), GetWebSiteStatus(e.Name));
+            //        siteNames.Add(e.Properties["ServerComment"].Value.ToString());
             //    }
             //}
 
 
 
-            return null;
         }
 
         public static Dictionary<string, string> GetAppPools(string username = null, string pwd = null)
@@ -125,7 +115,7 @@ namespace AppPoolManage.Web
         private static string GetWebSiteStatus(string siteId)
         {
             string result = "unknown";
-            DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader + siteId, Constants.Username, Constants.Pwd);
+            DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader + @"/" + siteId, Constants.Username, Constants.Pwd);
             PropertyValueCollection pvc;
             pvc = root.Properties["ServerState"];
             if (pvc.Value != null)
@@ -139,19 +129,19 @@ namespace AppPoolManage.Web
         private static DirectoryEntry GetDirectoryEntry(string path, string username, string pwd)
         {
             return new DirectoryEntry(path);
-        //    DirectoryEntry root = null;
+            //    DirectoryEntry root = null;
 
-        //    try
-        //    {
-        //        root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
-        //    }
+            //    try
+            //    {
+            //        root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
+            //    }
 
-        //    catch (Exception e)
-        //    {
-        //        throw new ArgumentException("username or pwd is wrong");
-        //    }
+            //    catch (Exception e)
+            //    {
+            //        throw new ArgumentException("username or pwd is wrong");
+            //    }
 
-        //    return root;
+            //    return root;
         }
 
 

@@ -29,25 +29,6 @@ namespace AppPoolManage.Web.Test
             Assert.AreEqual(websites != null && websites.ContainsKey("phase3"), true);
         }
 
-        [TestMethod]
-        public void test()
-        {
-            List<string> siteNames = new List<string>();
-
-            var root = new DirectoryEntry("IIS://localhost/W3SVC");
-            Console.WriteLine(root.Children);
-
-            // DirectoryEntry root = test("IIS://localhost/W3SVC");
-            //foreach (DirectoryEntry e in root.Children)
-            //{
-            //    if (e.SchemaClassName == "IIsWebServer")
-            //    {
-            //        siteNames.Add(e.Properties["ServerComment"].Value.ToString());
-            //    }
-            //}
-
-        }
-
 
         [TestMethod]
         public void RecycleAppPool()
