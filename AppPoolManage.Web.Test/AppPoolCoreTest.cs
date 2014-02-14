@@ -9,10 +9,10 @@ namespace AppPoolManage.Web.Test
     public class AppPoolCoreTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void GetAppPoolsTest()
         {
             var poolsName = AppPoolProvider.GetAppPools();
-            Assert.AreEqual(poolsName != null && poolsName.ContainsKey("phase3"), true);
+            Assert.AreEqual(poolsName != null && poolsName.Count>0, true);
         }
 
         [TestMethod]
@@ -23,25 +23,36 @@ namespace AppPoolManage.Web.Test
         }
 
         [TestMethod]
-        public void GetWebsite()
+        public void GetWebsitesTest()
         {
             var websites = AppPoolProvider.GetWebSites();
-           // Assert.AreEqual(websites != null && websites.ContainsKey("phase3"), true);
+           Assert.AreEqual(websites != null && websites.Count>0, true);
         }
 
 
         [TestMethod]
-        public void RecycleAppPool()
+        public void ControlAppPoolTest()
         {
-            string appPoolName = "phase3";
-            AppPoolProvider.ControlAppPool(appPoolName, CommandType.Recycle);
-            Assert.AreEqual(GetStatus(appPoolName), "Running");
-            AppPoolProvider.ControlAppPool(appPoolName, CommandType.Stop);
-            Assert.AreEqual(GetStatus(appPoolName), "Stopped");
-            AppPoolProvider.ControlAppPool(appPoolName, CommandType.Start);
-            Assert.AreEqual(GetStatus(appPoolName), "Running");
-
-
+            var poolsName = AppPoolProvider.GetAppPools();
+            if (poolsName != null && poolsName.Count > 0)
+            {
+                string appPoolName = string.Empty;
+                foreach (string name in poolsName.Keys)
+                {
+                    appPoolName = name;
+                    break;
+                }
+                AppPoolProvider.ControlAppPool(appPoolName, CommandType.Recycle);
+                Assert.AreEqual(GetStatus(appPoolName), "Running");
+                AppPoolProvider.ControlAppPool(appPoolName, CommandType.Stop);
+                Assert.AreEqual(GetStatus(appPoolName), "Stopped");
+                AppPoolProvider.ControlAppPool(appPoolName, CommandType.Start);
+                Assert.AreEqual(GetStatus(appPoolName), "Running");
+            }
+            else
+            {
+                Assert.Fail();
+            }
         }
 
         private string GetStatus(string appPoolName)

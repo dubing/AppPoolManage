@@ -54,7 +54,6 @@
             {
                 @Html.Label(TempData["Message"].ToString());
             }
-
         }
         @{
             var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
