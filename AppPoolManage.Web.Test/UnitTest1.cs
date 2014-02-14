@@ -25,7 +25,7 @@ namespace AppPoolManage.Web.Test
         [TestMethod]
         public void GetWebsite()
         {
-            var websites = AppPoolCore.GetWebsites();
+            var websites = AppPoolCore.GetWebSites();
            // Assert.AreEqual(websites != null && websites.ContainsKey("phase3"), true);
         }
 

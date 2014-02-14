@@ -13,7 +13,7 @@ namespace AppPoolManage.Web
         public string PoolName { get; set; }
         public string PoolStatus { get; set; }
         public string FilePath { get; set; }
-        public string IsUmbraco { get; set; }
+        public bool IsUmbraco { get; set; }
 
     }
 }

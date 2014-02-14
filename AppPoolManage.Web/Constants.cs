@@ -11,14 +11,31 @@ namespace AppPoolManage.Web
         public static string AddressHeader = "IIS://" + System.Environment.MachineName + "/W3SVC";
         public static string Username = null;
         public static string Pwd = null;
-
+        public static string INFO = "/INFO";
+        public static string MajorIISVersionNumber = "MajorIISVersionNumber";
 
     }
 
-    public enum eStates
+    public enum EStates
     {
         Start = 2,
         Stop = 4,
         Pause = 6,
+    }
+
+    public enum DeleteStates
+    {
+        Successs = 1,
+        NotExist = 2,
+        Error = 3,
+    }
+
+    public enum SiteStates
+    {
+        Running,
+        Stopped,
+        Paused,
+        NotExist,
+        Unknown
     }
 }

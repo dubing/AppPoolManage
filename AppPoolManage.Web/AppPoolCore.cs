@@ -17,8 +17,8 @@ namespace AppPoolManage.Web
 
         public static string GetIISVersion()
         {
-            DirectoryEntry getEntity = GetDirectoryEntry(Constants.AddressHeader + "/INFO", null, null);
-            return getEntity.Properties["MajorIISVersionNumber"].Value.ToString();
+            DirectoryEntry getEntity = GetDirectoryEntry(Constants.AddressHeader + Constants.INFO, null, null);
+            return getEntity.Properties[Constants.MajorIISVersionNumber].Value.ToString();
         }
 
         public static List<WebSitePro> GetWebSites()
@@ -42,6 +42,7 @@ namespace AppPoolManage.Web
                             website.PoolName = vsite.Properties["apppoolid"].Value.ToString();
                             website.PoolStatus = GetStatus(website.PoolName);
                             website.FilePath = vsite.Properties["Path"].Value.ToString();
+                            website.IsUmbraco = CheckUmbraco(website.FilePath);
                         }
 
                     }
@@ -78,14 +79,38 @@ namespace AppPoolManage.Web
 
         }
 
-        private bool CheckUmbraco(string path)
+        public static string DeleteUmbracoConfig(string path)
         {
-            DirectoryInfo rootFolder = new DirectoryInfo(path + "/App_Data/");
-            foreach (FileInfo file in rootFolder.GetFiles())
+            try
             {
-                if (file.Name.Equals("umbraco.config",StringComparison.CurrentCultureIgnoreCase) 
+                FileInfo file = new FileInfo(path + "\\App_Data\\umbraco.config");
+                if (file.Exists)
                 {
-                    return true;
+                    file.Delete();
+                    return DeleteStates.Successs.ToString();
+                }
+                else
+                {
+                    return DeleteStates.NotExist.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        private static bool CheckUmbraco(string path)
+        {
+            DirectoryInfo rootFolder = new DirectoryInfo(path + "\\App_Data\\");
+            if (rootFolder.Exists)
+            {
+                foreach (FileInfo file in rootFolder.GetFiles())
+                {
+                    if (file.Name.Equals("umbraco.config", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -114,13 +139,13 @@ namespace AppPoolManage.Web
                 switch (intStatus)
                 {
                     case 2:
-                        status = "Running";
+                        status = SiteStates.Running.ToString();
                         break;
                     case 4:
-                        status = "Stopped";
+                        status = SiteStates.Stopped.ToString();
                         break;
                     default:
-                        status = "Unknown";
+                        status = SiteStates.Paused.ToString();
                         break;
                 }
             }
@@ -133,13 +158,13 @@ namespace AppPoolManage.Web
 
         private static string GetWebSiteStatus(int status)
         {
-            string result = "unknown";
-            if (status != null)
-                result = (status.Equals((int)eStates.Start) ? "Running" :
-                          status.Equals((int)eStates.Stop) ? "Stopped" :
-                          status.Equals((int)eStates.Pause) ? "Paused" :
-                          status.ToString());
-            return result;
+            string result = SiteStates.Unknown.ToString();
+
+            return (status.Equals((int)EStates.Start) ? SiteStates.Running.ToString() :
+                      status.Equals((int)EStates.Stop) ? SiteStates.Stopped.ToString() :
+                      status.Equals((int)EStates.Pause) ? SiteStates.Paused.ToString() :
+                      status.ToString());
+
         }
 
         private static string GetSiteIdByName(string siteName)
@@ -167,7 +192,7 @@ namespace AppPoolManage.Web
                 root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
             }
 
-            catch (Exception e)
+            catch
             {
                 throw new ArgumentException("username or pwd is wrong");
             }

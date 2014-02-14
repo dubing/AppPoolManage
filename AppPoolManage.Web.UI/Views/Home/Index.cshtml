@@ -80,8 +80,15 @@
                     grid.Column(
                         columnName: "",
                                  format: item => Html.ActionLink("Stop", "ControlAppPool", new { appPoolName = item.PoolName, command = "Stop" })
+                    ),
+                    grid.Column("IsUmbraco", " 是否为umbraco"),
+                    grid.Column(
+                        columnName: "",
+                                 format: item => Html.ActionLink("DeleteConfig", "DeleteUmbracoConfig", new { path = item.FilePath })
                     )
+                    
          ))
+        </div>
         </div>
 </body>
 </html>

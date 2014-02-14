@@ -37,6 +37,13 @@ namespace AppPoolManage.Web.UI.Controllers
             return View("index", GetWebSites());
         }
 
+        public ActionResult DeleteUmbracoConfig(string path)
+        {
+            var doResult = AppPoolCore.DeleteUmbracoConfig(path);
+
+            return View("index", GetWebSites());
+        }
+
         private List<WebSitePro> GetWebSites()
         {
             return AppPoolCore.GetWebSites();
