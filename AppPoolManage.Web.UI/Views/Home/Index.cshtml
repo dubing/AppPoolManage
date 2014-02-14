@@ -60,7 +60,6 @@
             var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
             grid.Pager(WebGridPagerModes.NextPrevious);}
         <div id="gridContent">
-            
             @grid.GetHtml(tableStyle: "webGrid",
                 headerStyle: "header",
                 alternatingRowStyle: "alt",

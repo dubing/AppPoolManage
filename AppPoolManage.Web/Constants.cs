@@ -33,22 +33,30 @@ namespace AppPoolManage.Web
     {
         Start = 2,
         Stop = 4,
-        Pause = 6,
+        Pause = 6
     }
 
     public enum DeleteStates
     {
         Successs = 1,
         NotExist = 2,
-        Error = 3,
+        Error = 3
+    }
+
+    public enum PoolStates
+    {
+        Running = 2,
+        Stopped = 4,
+        Paused = 6,
+        Unknown = 9
     }
 
     public enum SiteStates
     {
-        Running,
-        Stopped,
-        Paused,
-        NotExist,
-        Unknown
+        Running =2,
+        Stopped =4,
+        Paused =6,
+        NotExist=0,
+        Unknown =9
     }
 }

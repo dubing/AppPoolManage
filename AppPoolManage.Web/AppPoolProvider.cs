@@ -12,7 +12,7 @@ using System.IO;
 
 namespace AppPoolManage.Web
 {
-    public static class AppPoolCore
+    public static class AppPoolProvider
     {
 
         public static string GetIISVersion()
@@ -50,20 +50,26 @@ namespace AppPoolManage.Web
                 }
             }
             return webSitePros;
+        }
 
+         public static Dictionary<string, string> GetAppPools()
+        {
+            return GetAppPools(Constants.Username, Constants.Pwd);
         }
 
         public static Dictionary<string, string> GetAppPools(string username, string pwd)
         {
-            return GetApplicationPools(Constants.AddressHeader, Constants.Username, Constants.Pwd);
+            return GetApplicationPools(Constants.AddressHeader, username, pwd);
         }
 
-        public static Dictionary<string, string> GetAppPools()
+
+
+        public static bool ControlAppPool(string appPoolName, string command)
         {
-            return GetAppPools(null, null);
+            return ControlAppPool(appPoolName, command, null, null);
         }
 
-        public static bool ControlAppPool(string appPoolName, string command, string username = null, string pwd = null)
+        public static bool ControlAppPool(string appPoolName, string command, string username, string pwd)
         {
             string appPoolPath = Constants.AddressHeader + Constants.AppPools + "/" + appPoolName;
 
@@ -130,34 +136,24 @@ namespace AppPoolManage.Web
             {
                 var w3svc = new DirectoryEntry(appPoolPath);
                 intStatus = (int)w3svc.InvokeGet(Constants.AppPoolState);
-                switch (intStatus)
-                {
-                    case 2:
-                        status = SiteStates.Running.ToString();
-                        break;
-                    case 4:
-                        status = SiteStates.Stopped.ToString();
-                        break;
-                    default:
-                        status = SiteStates.Paused.ToString();
-                        break;
-                }
+                return ((PoolStates)intStatus).ToString();
             }
             catch
             {
-                return null;
+                return PoolStates.Unknown.ToString();
             }
-            return status;
         }
 
         private static string GetWebSiteStatus(int status)
         {
-            string result = SiteStates.Unknown.ToString();
-
-            return (status.Equals((int)EStates.Start) ? SiteStates.Running.ToString() :
-                      status.Equals((int)EStates.Stop) ? SiteStates.Stopped.ToString() :
-                      status.Equals((int)EStates.Pause) ? SiteStates.Paused.ToString() :
-                      status.ToString());
+            try
+            {
+                return ((SiteStates)status).ToString();
+            }
+            catch
+            {
+                return SiteStates.Unknown.ToString();
+            }
 
         }
 

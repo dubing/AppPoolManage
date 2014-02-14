@@ -11,21 +11,21 @@ namespace AppPoolManage.Web.Test
         [TestMethod]
         public void TestMethod1()
         {
-            var poolsName = AppPoolCore.GetAppPools();
+            var poolsName = AppPoolProvider.GetAppPools();
             Assert.AreEqual(poolsName != null && poolsName.ContainsKey("phase3"), true);
         }
 
         [TestMethod]
         public void GetVersionTest_VerifyVersionNumber()
         {
-            var iisVersion = AppPoolCore.GetIISVersion();
+            var iisVersion = AppPoolProvider.GetIISVersion();
             Assert.AreEqual(iisVersion, "7");
         }
 
         [TestMethod]
         public void GetWebsite()
         {
-            var websites = AppPoolCore.GetWebSites();
+            var websites = AppPoolProvider.GetWebSites();
            // Assert.AreEqual(websites != null && websites.ContainsKey("phase3"), true);
         }
 
@@ -34,11 +34,11 @@ namespace AppPoolManage.Web.Test
         public void RecycleAppPool()
         {
             string appPoolName = "phase3";
-            AppPoolCore.ControlAppPool(appPoolName, "Recycle");
+            AppPoolProvider.ControlAppPool(appPoolName, "Recycle");
             Assert.AreEqual(GetStatus(appPoolName), "Running");
-            AppPoolCore.ControlAppPool(appPoolName, "Stop");
+            AppPoolProvider.ControlAppPool(appPoolName, "Stop");
             Assert.AreEqual(GetStatus(appPoolName), "Stopped");
-            AppPoolCore.ControlAppPool(appPoolName, "Start");
+            AppPoolProvider.ControlAppPool(appPoolName, "Start");
             Assert.AreEqual(GetStatus(appPoolName), "Running");
 
 

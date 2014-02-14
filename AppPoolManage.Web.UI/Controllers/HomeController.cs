@@ -17,7 +17,7 @@ namespace AppPoolManage.Web.UI.Controllers
 
         public ActionResult ControlAppPool(string appPoolName, string command)
         {
-            var doResult = AppPoolCore.ControlAppPool(appPoolName, command);
+            var doResult = AppPoolProvider.ControlAppPool(appPoolName, command);
             StringBuilder message = new StringBuilder();
             message.Append("PoolName:");
             message.Append(appPoolName);
@@ -39,14 +39,14 @@ namespace AppPoolManage.Web.UI.Controllers
 
         public ActionResult DeleteUmbracoConfig(string path)
         {
-            var doResult = AppPoolCore.DeleteUmbracoConfig(path);
+            var doResult = AppPoolProvider.DeleteUmbracoConfig(path);
             ViewData["Message"] = "DeleteUmbracoConfig " + doResult.ToString();
             return View("index", GetWebSites());
         }
 
         private List<WebSitePro> GetWebSites()
         {
-            return AppPoolCore.GetWebSites();
+            return AppPoolProvider.GetWebSites();
         }
 
     }
