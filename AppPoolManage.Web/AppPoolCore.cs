@@ -102,18 +102,8 @@ namespace AppPoolManage.Web
 
         private static bool CheckUmbraco(string path)
         {
-            DirectoryInfo rootFolder = new DirectoryInfo(path + Constants.App_Data);
-            if (rootFolder.Exists)
-            {
-                foreach (FileInfo file in rootFolder.GetFiles())
-                {
-                    if (file.Name.Equals(Constants.UmbracoConfig, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            DirectoryInfo rootFolder = new DirectoryInfo(path + Constants.UmbracoDirectory);
+            return rootFolder.Exists;
         }
 
         private static Dictionary<string, string> GetApplicationPools(string computerName, string username, string pwd)

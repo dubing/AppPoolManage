@@ -40,7 +40,7 @@ namespace AppPoolManage.Web.UI.Controllers
         public ActionResult DeleteUmbracoConfig(string path)
         {
             var doResult = AppPoolCore.DeleteUmbracoConfig(path);
-            ViewData["Message"] = "DeleteUmbracoConfig" + doResult.ToString();
+            ViewData["Message"] = "DeleteUmbracoConfig " + doResult.ToString();
             return View("index", GetWebSites());
         }
 
