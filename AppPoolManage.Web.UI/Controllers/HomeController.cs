@@ -17,31 +17,35 @@ namespace AppPoolManage.Web.UI.Controllers
 
         public ActionResult ControlAppPool(string appPoolName, string command)
         {
-            var doResult = AppPoolProvider.ControlAppPool(appPoolName, command);
-            StringBuilder message = new StringBuilder();
-            message.Append("PoolName:");
-            message.Append(appPoolName);
-            message.Append(" ");
-            message.Append(command);
-            message.Append(" ");
-            if (doResult)
+            try
             {
-                message.Append("success");
+                CommandType poolCommand = (CommandType)Enum.Parse(typeof(CommandType), command, true);
+                var doResult = AppPoolProvider.ControlAppPool(appPoolName, poolCommand);
+                StringBuilder message = new StringBuilder();
+                message.AppendFormat("PoolName:" + appPoolName + " " + command + " ");
+                if (doResult)
+                {
+                    message.Append("success");
+                }
+                else
+                {
+                    message.Append("fail");
+                }
+                TempData["Message"] = message.ToString();
             }
-            else
+            catch
             {
-                message.Append("fail");
+                TempData["Message"] = "system error,please contact with the administrator";
             }
-            ViewData["Message"] = message.ToString();
+            return RedirectToAction("index");
 
-            return View("index", GetWebSites());
         }
 
         public ActionResult DeleteUmbracoConfig(string path)
         {
             var doResult = AppPoolProvider.DeleteUmbracoConfig(path);
-            ViewData["Message"] = "DeleteUmbracoConfig " + doResult.ToString();
-            return View("index", GetWebSites());
+            ViewData["Message"] = "Delete UmbracoConfig " + doResult.ToString();
+            return RedirectToAction("index", GetWebSites());
         }
 
         private List<WebSitePro> GetWebSites()

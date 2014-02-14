@@ -34,11 +34,11 @@ namespace AppPoolManage.Web.Test
         public void RecycleAppPool()
         {
             string appPoolName = "phase3";
-            AppPoolProvider.ControlAppPool(appPoolName, "Recycle");
+            AppPoolProvider.ControlAppPool(appPoolName, CommandType.Recycle);
             Assert.AreEqual(GetStatus(appPoolName), "Running");
-            AppPoolProvider.ControlAppPool(appPoolName, "Stop");
+            AppPoolProvider.ControlAppPool(appPoolName, CommandType.Stop);
             Assert.AreEqual(GetStatus(appPoolName), "Stopped");
-            AppPoolProvider.ControlAppPool(appPoolName, "Start");
+            AppPoolProvider.ControlAppPool(appPoolName, CommandType.Start);
             Assert.AreEqual(GetStatus(appPoolName), "Running");
 
 

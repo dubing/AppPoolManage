@@ -29,11 +29,11 @@ namespace AppPoolManage.Web
 
     }
 
-    public enum EStates
+    public enum CommandType
     {
-        Start = 2,
-        Stop = 4,
-        Pause = 6
+        Recycle,
+        Start,
+        Stop
     }
 
     public enum DeleteStates

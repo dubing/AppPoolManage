@@ -50,9 +50,9 @@
 <body>
     <div>
         @{
-            if (ViewData["Message"] != null)
+            if (TempData["Message"] != null)
             {
-                @Html.Label(ViewData["Message"].ToString());
+                @Html.Label(TempData["Message"].ToString());
             }
 
         }
