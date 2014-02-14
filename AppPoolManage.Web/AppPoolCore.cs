@@ -29,19 +29,19 @@ namespace AppPoolManage.Web
 
             foreach (DirectoryEntry site in root.Children)
             {
-                if (site.SchemaClassName == "IIsWebServer")
+                if (site.SchemaClassName == Constants.IIsWebServer)
                 {
                     var website = new WebSitePro();
-                    website.SiteName = site.Properties["ServerComment"].Value.ToString();
-                    website.SiteStatus = GetWebSiteStatus(Convert.ToInt32(site.Properties["ServerState"].Value.ToString()));
+                    website.SiteName = site.Properties[Constants.ServerComment].Value.ToString();
+                    website.SiteStatus = GetWebSiteStatus(Convert.ToInt32(site.Properties[Constants.ServerState].Value.ToString()));
 
                     foreach (DirectoryEntry vsite in site.Children)
                     {
-                        if (vsite.SchemaClassName == "IIsWebVirtualDir")
+                        if (vsite.SchemaClassName == Constants.IIsWebVirtualDir)
                         {
-                            website.PoolName = vsite.Properties["apppoolid"].Value.ToString();
+                            website.PoolName = vsite.Properties[Constants.AppPoolId].Value.ToString();
                             website.PoolStatus = GetStatus(website.PoolName);
-                            website.FilePath = vsite.Properties["Path"].Value.ToString();
+                            website.FilePath = vsite.Properties[Constants.Path].Value.ToString();
                             website.IsUmbraco = CheckUmbraco(website.FilePath);
                         }
 
@@ -61,7 +61,7 @@ namespace AppPoolManage.Web
 
         public static bool ControlAppPool(string appPoolName, string command, string username = null, string pwd = null)
         {
-            string appPoolPath = Constants.AddressHeader + "/AppPools/" + appPoolName;
+            string appPoolPath = Constants.AddressHeader + Constants.AppPools + "/" + appPoolName;
 
             try
             {
@@ -83,7 +83,7 @@ namespace AppPoolManage.Web
         {
             try
             {
-                FileInfo file = new FileInfo(path + "\\App_Data\\umbraco.config");
+                FileInfo file = new FileInfo(path + Constants.App_Data + Constants.UmbracoConfig);
                 if (file.Exists)
                 {
                     file.Delete();
@@ -102,12 +102,12 @@ namespace AppPoolManage.Web
 
         private static bool CheckUmbraco(string path)
         {
-            DirectoryInfo rootFolder = new DirectoryInfo(path + "\\App_Data\\");
+            DirectoryInfo rootFolder = new DirectoryInfo(path + Constants.App_Data);
             if (rootFolder.Exists)
             {
                 foreach (FileInfo file in rootFolder.GetFiles())
                 {
-                    if (file.Name.Equals("umbraco.config", StringComparison.CurrentCultureIgnoreCase))
+                    if (file.Name.Equals(Constants.UmbracoConfig, StringComparison.CurrentCultureIgnoreCase))
                     {
                         return true;
                     }
@@ -118,7 +118,7 @@ namespace AppPoolManage.Web
 
         private static Dictionary<string, string> GetApplicationPools(string computerName, string username, string pwd)
         {
-            var root = GetDirectoryEntry(Constants.AddressHeader + "/AppPools", username, pwd);
+            var root = GetDirectoryEntry(Constants.AddressHeader + Constants.AppPools, username, pwd);
 
             if (root == null) return null;
             var items = (from DirectoryEntry entry in root.Children let properties = entry.Properties select entry.Name).ToList();
@@ -130,12 +130,12 @@ namespace AppPoolManage.Web
         private static string GetStatus(string appPoolName)
         {
             string status = string.Empty;
-            string appPoolPath = Constants.AddressHeader + "/AppPools/" + appPoolName;
+            string appPoolPath = Constants.AddressHeader + Constants.AppPools + "/" + appPoolName;
             int intStatus = 0;
             try
             {
                 var w3svc = new DirectoryEntry(appPoolPath);
-                intStatus = (int)w3svc.InvokeGet("AppPoolState");
+                intStatus = (int)w3svc.InvokeGet(Constants.AppPoolState);
                 switch (intStatus)
                 {
                     case 2:
@@ -172,9 +172,9 @@ namespace AppPoolManage.Web
             DirectoryEntry root = new DirectoryEntry(Constants.AddressHeader); ;
             foreach (DirectoryEntry e in root.Children)
             {
-                if (e.SchemaClassName == "IIsWebServer")
+                if (e.SchemaClassName == Constants.IIsWebServer)
                 {
-                    if (e.Properties["ServerComment"].Value.ToString().Equals(siteName, StringComparison.OrdinalIgnoreCase))
+                    if (e.Properties[Constants.ServerComment].Value.ToString().Equals(siteName, StringComparison.OrdinalIgnoreCase))
                     {
                         return e.Name;
                     }

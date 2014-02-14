@@ -13,6 +13,18 @@ namespace AppPoolManage.Web
         public static string Pwd = null;
         public static string INFO = "/INFO";
         public static string MajorIISVersionNumber = "MajorIISVersionNumber";
+        public static string IIsWebServer = "IIsWebServer";
+        public static string ServerComment = "ServerComment";
+        public static string ServerState = "ServerState";
+        public static string IIsWebVirtualDir = "IIsWebVirtualDir";
+        public static string AppPoolId = "apppoolid";
+        public static string Path = "Path";
+        public static string AppPools = "/AppPools";
+        public static string App_Data = "\\App_Data\\";
+        public static string UmbracoConfig = "umbraco.config";
+        public static string AppPoolState = "AppPoolState";
+
+        
 
     }
 
