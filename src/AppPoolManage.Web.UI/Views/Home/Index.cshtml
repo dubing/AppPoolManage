@@ -49,10 +49,12 @@
 </head>
 <body>
     <div>
+        @TempData["Message"]
+
         @{
             if (TempData["Message"] != null)
             {
-                @Html.Label(TempData["Message"].ToString());
+                TempData["Message"].ToString();
             }
         }
         @{
