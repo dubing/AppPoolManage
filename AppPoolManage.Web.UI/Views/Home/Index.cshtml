@@ -35,7 +35,9 @@
         .gridHead a:hover {
             text-decoration: underline;
         }
-
+        .SiteStatus {
+            width: 500px;
+        }
         .Status {
             width: auto;
         }
@@ -52,10 +54,7 @@
             {
                 @Html.Label(ViewData["Message"].ToString());
             }
-            else
-            {
-                @Html.Label("hoho");
-            }
+
         }
         @{
             var grid = new WebGrid(Model, canPage: true, rowsPerPage: 5, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
@@ -66,19 +65,21 @@
                 alternatingRowStyle: "alt",
                 selectedRowStyle: "select",
                 columns: grid.Columns(
-                    grid.Column("AppPoolsName", " AppPoolsName"),
-                    grid.Column("Status", " Status", style: "Status"),
+                    grid.Column("SiteName", " 站点名称"),
+                    grid.Column("SiteStatus", " 站点状态", style: "SiteStatus"),
+                    grid.Column("PoolName", " 程序池名称"),
+                    grid.Column("PoolStatus", " 程序池状态", style: "Status"),
                     grid.Column(
                         columnName: "",
-                        format: item => Html.ActionLink("Recycle", "ControlAppPool", new { appPoolName = item.AppPoolsName, command = "Recycle" })
+                                 format: item => Html.ActionLink("Recycle", "ControlAppPool", new { appPoolName = item.PoolName, command = "Recycle" })
                     ),
                     grid.Column(
                         columnName: "",
-                        format: item => Html.ActionLink("Start", "ControlAppPool", new { appPoolName = item.AppPoolsName, command = "Start" })
+                                 format: item => Html.ActionLink("Start", "ControlAppPool", new { appPoolName = item.PoolName, command = "Start" })
                     ),
                     grid.Column(
                         columnName: "",
-                        format: item => Html.ActionLink("Stop", "ControlAppPool", new { appPoolName = item.AppPoolsName, command = "Stop" })
+                                 format: item => Html.ActionLink("Stop", "ControlAppPool", new { appPoolName = item.PoolName, command = "Stop" })
                     )
          ))
         </div>

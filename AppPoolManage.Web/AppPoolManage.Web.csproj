@@ -53,6 +53,7 @@
     <Compile Include="AppPoolCore.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebSitePro.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

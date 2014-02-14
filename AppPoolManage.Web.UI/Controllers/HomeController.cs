@@ -12,7 +12,7 @@ namespace AppPoolManage.Web.UI.Controllers
     {
         public ActionResult Index()
         {
-            return View(GetAppPools());
+            return View(GetWebSites());
         }
 
         public ActionResult ControlAppPool(string appPoolName, string command)
@@ -34,13 +34,12 @@ namespace AppPoolManage.Web.UI.Controllers
             }
             ViewData["Message"] = message.ToString();
 
-            return View("index", GetAppPools());
+            return View("index", GetWebSites());
         }
 
-        private IList<AppPool> GetAppPools()
+        private List<WebSitePro> GetWebSites()
         {
-            var appPools = AppPoolCore.GetAppPools();
-            return appPools.Select(appPool => new AppPool { AppPoolsName = appPool.Key, Status = appPool.Value }).ToList();
+            return AppPoolCore.GetWebSites();
         }
 
     }

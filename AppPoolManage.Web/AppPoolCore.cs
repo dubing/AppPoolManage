@@ -8,12 +8,12 @@ using System.Collections;
 using Microsoft.Web.Administration;
 using Microsoft.Web.Management.Server;
 using System.DirectoryServices;
+using System.IO;
 
 namespace AppPoolManage.Web
 {
     public static class AppPoolCore
     {
-
 
         public static string GetIISVersion()
         {
@@ -21,29 +21,35 @@ namespace AppPoolManage.Web
             return getEntity.Properties["MajorIISVersionNumber"].Value.ToString();
         }
 
-        private static DirectoryEntry test(string path)
+        public static List<WebSitePro> GetWebSites()
         {
-            return new DirectoryEntry(path);
-        }
+            List<WebSitePro> webSitePros = new List<WebSitePro>();
 
-        public static Dictionary<string, string> GetWebsites()
-        {
-            List<string> siteNames = new List<string>();
+            var root = new DirectoryEntry(Constants.AddressHeader);
 
-            var root = new DirectoryEntry("IIS://localhost/W3SVC");
+            foreach (DirectoryEntry site in root.Children)
+            {
+                if (site.SchemaClassName == "IIsWebServer")
+                {
+                    var website = new WebSitePro();
+                    website.SiteName = site.Properties["ServerComment"].Value.ToString();
+                    website.SiteStatus = GetWebSiteStatus(Convert.ToInt32(site.Properties["ServerState"].Value.ToString()));
 
-            return (from DirectoryEntry e in root.Children where e.SchemaClassName == "IIsWebServer" select e)
-                .ToDictionary(e => e.Properties["ServerComment"].Value.ToString(), e => GetWebSiteStatus(e.Name));
+                    foreach (DirectoryEntry vsite in site.Children)
+                    {
+                        if (vsite.SchemaClassName == "IIsWebVirtualDir")
+                        {
+                            website.PoolName = vsite.Properties["apppoolid"].Value.ToString();
+                            website.PoolStatus = GetStatus(website.PoolName);
+                            website.FilePath = vsite.Properties["Path"].Value.ToString();
+                        }
 
-            //foreach (DirectoryEntry e in root.Children)
-            //{
-            //    if (e.SchemaClassName == "IIsWebServer")
-            //    {
-            //        siteNames.Add(e.Properties["ServerComment"].Value.ToString());
-            //    }
-            //}
+                    }
+                    webSitePros.Add(website);
+                }
+            }
 
-
+            return webSitePros;
 
         }
 
@@ -70,6 +76,19 @@ namespace AppPoolManage.Web
                 return false;
             }
 
+        }
+
+        private bool CheckUmbraco(string path)
+        {
+            DirectoryInfo rootFolder = new DirectoryInfo(path + "/App_Data/");
+            foreach (FileInfo file in rootFolder.GetFiles())
+            {
+                if (file.Name.Equals("umbraco.config",StringComparison.CurrentCultureIgnoreCase) 
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static Dictionary<string, string> GetApplicationPools(string computerName, string username, string pwd)
@@ -112,36 +131,48 @@ namespace AppPoolManage.Web
             return status;
         }
 
-        private static string GetWebSiteStatus(string siteId)
+        private static string GetWebSiteStatus(int status)
         {
             string result = "unknown";
-            DirectoryEntry root = GetDirectoryEntry(Constants.AddressHeader + @"/" + siteId, Constants.Username, Constants.Pwd);
-            PropertyValueCollection pvc;
-            pvc = root.Properties["ServerState"];
-            if (pvc.Value != null)
-                result = (pvc.Value.Equals((int)eStates.Start) ? "Running" :
-                          pvc.Value.Equals((int)eStates.Stop) ? "Stopped" :
-                          pvc.Value.Equals((int)eStates.Pause) ? "Paused" :
-                          pvc.Value.ToString());
+            if (status != null)
+                result = (status.Equals((int)eStates.Start) ? "Running" :
+                          status.Equals((int)eStates.Stop) ? "Stopped" :
+                          status.Equals((int)eStates.Pause) ? "Paused" :
+                          status.ToString());
             return result;
+        }
+
+        private static string GetSiteIdByName(string siteName)
+        {
+            DirectoryEntry root = new DirectoryEntry(Constants.AddressHeader); ;
+            foreach (DirectoryEntry e in root.Children)
+            {
+                if (e.SchemaClassName == "IIsWebServer")
+                {
+                    if (e.Properties["ServerComment"].Value.ToString().Equals(siteName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return e.Name;
+                    }
+                }
+            }
+            return null;
         }
 
         private static DirectoryEntry GetDirectoryEntry(string path, string username, string pwd)
         {
-            return new DirectoryEntry(path);
-            //    DirectoryEntry root = null;
+            DirectoryEntry root = null;
 
-            //    try
-            //    {
-            //        root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
-            //    }
+            try
+            {
+                root = username == null ? new DirectoryEntry(path) : new DirectoryEntry(path, username, pwd, AuthenticationTypes.Secure);
+            }
 
-            //    catch (Exception e)
-            //    {
-            //        throw new ArgumentException("username or pwd is wrong");
-            //    }
+            catch (Exception e)
+            {
+                throw new ArgumentException("username or pwd is wrong");
+            }
 
-            //    return root;
+            return root;
         }
 
 
