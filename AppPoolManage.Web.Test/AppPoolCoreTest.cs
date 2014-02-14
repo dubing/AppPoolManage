@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace AppPoolManage.Web.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class AppPoolCoreTest
     {
         [TestMethod]
         public void TestMethod1()
@@ -16,7 +16,7 @@ namespace AppPoolManage.Web.Test
         }
 
         [TestMethod]
-        public void GetVersion()
+        public void GetVersionTest_VerifyVersionNumber()
         {
             var iisVersion = AppPoolCore.GetIISVersion();
             Assert.AreEqual(iisVersion, "7");

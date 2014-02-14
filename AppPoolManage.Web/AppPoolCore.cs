@@ -49,14 +49,18 @@ namespace AppPoolManage.Web
                     webSitePros.Add(website);
                 }
             }
-
             return webSitePros;
 
         }
 
-        public static Dictionary<string, string> GetAppPools(string username = null, string pwd = null)
+        public static Dictionary<string, string> GetAppPools(string username, string pwd)
         {
             return GetApplicationPools(Constants.AddressHeader, Constants.Username, Constants.Pwd);
+        }
+
+        public static Dictionary<string, string> GetAppPools()
+        {
+            return GetAppPools(null, null);
         }
 
         public static bool ControlAppPool(string appPoolName, string command, string username = null, string pwd = null)
