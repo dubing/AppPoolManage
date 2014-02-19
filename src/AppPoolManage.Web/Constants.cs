@@ -24,6 +24,7 @@ namespace AppPoolManage.Web
         public static string UmbracoDirectory = "\\Umbraco\\";
         public static string UmbracoConfig = "umbraco.config";
         public static string AppPoolState = "AppPoolState";
+        public static string Success = "success";
 
         
 

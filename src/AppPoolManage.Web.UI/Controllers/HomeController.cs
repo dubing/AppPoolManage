@@ -1,4 +1,5 @@
-﻿using AppPoolManage.Web.UI.Models;
+﻿using AppPoolManage.Web.UI.Attribute;
+using AppPoolManage.Web.UI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,10 @@ using System.Web.Mvc;
 
 namespace AppPoolManage.Web.UI.Controllers
 {
+    [AkqaAuthorizeAttribute]
     public class HomeController : Controller
     {
+
         public ActionResult Index()
         {
             return View(GetWebSites());
@@ -23,13 +26,13 @@ namespace AppPoolManage.Web.UI.Controllers
                 var doResult = AppPoolProvider.ControlAppPool(appPoolName, poolCommand);
                 StringBuilder message = new StringBuilder();
                 message.AppendFormat("PoolName:" + appPoolName + " " + command + " ");
-                if (doResult)
+                if (doResult.Equals(Constants.Success))
                 {
                     message.Append("success");
                 }
                 else
                 {
-                    message.Append("fail");
+                    message.Append("fail " + doResult);
                 }
                 TempData["Message"] = message.ToString();
             }
@@ -44,7 +47,7 @@ namespace AppPoolManage.Web.UI.Controllers
         public ActionResult DeleteUmbracoConfig(string path)
         {
             var doResult = AppPoolProvider.DeleteUmbracoConfig(path);
-            ViewData["Message"] = "Delete UmbracoConfig " + doResult.ToString();
+            TempData["Message"] = "Delete UmbracoConfig " + doResult.ToString();
             return RedirectToAction("index", GetWebSites());
         }
 
@@ -52,6 +55,8 @@ namespace AppPoolManage.Web.UI.Controllers
         {
             return AppPoolProvider.GetWebSites();
         }
+
+
 
     }
 }

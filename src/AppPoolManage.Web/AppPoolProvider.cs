@@ -62,12 +62,12 @@ namespace AppPoolManage.Web
             return GetApplicationPools(Constants.AddressHeader, username, pwd);
         }
 
-        public static bool ControlAppPool(string appPoolName, CommandType command)
+        public static string ControlAppPool(string appPoolName, CommandType command)
         {
             return ControlAppPool(appPoolName, command, null, null);
         }
 
-        public static bool ControlAppPool(string appPoolName, CommandType command, string username, string pwd)
+        public static string ControlAppPool(string appPoolName, CommandType command, string username, string pwd)
         {
             string appPoolPath = Constants.AddressHeader + Constants.AppPools + "/" + appPoolName;
 
@@ -77,12 +77,12 @@ namespace AppPoolManage.Web
                 {
                     appPoolEntry.Invoke(command.ToString(), null);
                     appPoolEntry.Close();
-                    return true;
+                    return Constants.Success;
                 }
             }
-            catch
+            catch(Exception e)
             {
-                return false;
+                return e.Message;
             }
 
         }

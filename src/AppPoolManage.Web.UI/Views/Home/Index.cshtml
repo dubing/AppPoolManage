@@ -12,7 +12,7 @@
         .webGrid {
             margin: 4px;
             border-collapse: collapse;
-            width: 500px;
+            width: 1000px;
             background-color: #FCFCFC;
         }
 
@@ -35,8 +35,8 @@
         .gridHead a:hover {
             text-decoration: underline;
         }
-        .SiteStatus {
-            width: 500px;
+        .wcolumn {
+            width: 150px;
         }
         .Status {
             width: auto;
@@ -67,9 +67,9 @@
                 selectedRowStyle: "select",
                 columns: grid.Columns(
                     grid.Column("SiteName", " 站点名称"),
-                    grid.Column("SiteStatus", " 站点状态", style: "SiteStatus"),
+                    grid.Column("SiteStatus", " 站点状态", style: "wcolumn"),
                     grid.Column("PoolName", " 程序池名称"),
-                    grid.Column("PoolStatus", " 程序池状态", style: "Status"),
+                    grid.Column("PoolStatus", " 程序池状态", style: "wcolumn"),
                     grid.Column(
                         columnName: "",
                                  format: item => Html.ActionLink("Recycle", "ControlAppPool", new { appPoolName = item.PoolName, command = "Recycle" })
@@ -82,10 +82,10 @@
                         columnName: "",
                                  format: item => Html.ActionLink("Stop", "ControlAppPool", new { appPoolName = item.PoolName, command = "Stop" })
                     ),
-                    grid.Column("IsUmbraco", " 是否为umbraco"),
+                    grid.Column("IsUmbraco", " 是否为umbraco", style: "wcolumn"),
                     grid.Column(
                         columnName: "",
-                                 format: item => Html.ActionLink("DeleteConfig", "DeleteUmbracoConfig", new { path = item.FilePath })
+                                 format: item => Html.ActionLink("DeleteUmbracoConfig", "DeleteUmbracoConfig", new { path = item.FilePath })
                     )
                     
          ))

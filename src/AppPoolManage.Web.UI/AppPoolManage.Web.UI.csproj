@@ -110,6 +110,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\AkqaAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -121,7 +122,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="LoginError.html" />
     <Content Include="Global.asax" />
+    <None Include="Properties\PublishProfiles\apppool.pubxml" />
     <None Include="Properties\PublishProfiles\AppPoolManage.pubxml" />
     <None Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Images\accent.png" />
