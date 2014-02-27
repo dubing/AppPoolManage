@@ -9,10 +9,8 @@ using System.Web.Mvc;
 
 namespace AppPoolManage.Web.UI.Controllers
 {
-    [AkqaAuthorizeAttribute]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-
         public ActionResult Index()
         {
             return View(GetWebSites());
