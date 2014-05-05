@@ -9,7 +9,7 @@ namespace AppPoolManage.Web.UI.Controllers
 {
     public class BaseController : Controller
     {
-        private static string AuthUser = "akqauser";
+        private static string AuthUser = "wppuser";
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
